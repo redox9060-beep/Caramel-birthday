@@ -1,0 +1,131 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #ffeef8; /* Cute soft pink/pastel background */
+    color: #4a154b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Screen Management */
+.screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 90%;
+    max-width: 800px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.screen.active {
+    display: flex;
+}
+
+h1 { font-size: 2.5rem; margin-bottom: 20px; }
+button {
+    background: #9b5de5;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 5px 15px rgba(155, 93, 229, 0.3);
+}
+button:hover { transform: scale(1.05); }
+
+/* Step 2: Yes / No Dynamic Buttons */
+.btn-container {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-top: 30px;
+    position: relative;
+    height: 150px;
+    width: 100%;
+    justify-content: center;
+}
+#yes-btn {
+    font-size: 3.5rem; /* Massive YES button */
+    padding: 25px 60px;
+    background: #ff007f;
+}
+#no-btn {
+    font-size: 0.7rem; /* Tiny no button */
+    padding: 5px 10px;
+    background: #ccc;
+    color: #333;
+    position: absolute;
+    transition: all 0.1s ease;
+}
+
+/* Step 3: Bear Styling */
+.bear-container img {
+    max-width: 250px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+/* Step 4: Video / Photos Grid */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 120px 1fr;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+}
+.gallery-item {
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+.gallery-item img {
+    width: 100%;
+    border-radius: 8px;
+    max-height: 180px;
+    object-fit: cover;
+}
+.gallery-item p { font-size: 0.9rem; font-style: italic; margin-top: 8px; }
+
+.center-heart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+.purple-heart {
+    font-size: 4rem;
+    animation: pulse 1.2s infinite;
+}
+#press-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background: #7209b7;
+}
+
+/* Step 5: Popping Letter */
+.letter-container {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border: 3px dashed #9b5de5;
+    max-width: 600px;
+    transform: scale(0);
+    animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+@keyframes popUp { to { transform: scale(1); } }
+
