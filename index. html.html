@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday! 💜</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- BACKGROUND MUSIC (Plays at the very end) -->
+    <audio id="bg-music" src="your-song.mp3"></audio>
+
+    <!-- STEP 1: THE WISH -->
+    <div id="step-1" class="screen active">
+        <h1>Happy Birthday to My Favorite Person! 🎉</h1>
+        <p>I made something incredibly special just for you. Ready?</p>
+        <button onclick="nextStep(1, 2)">Let's Go! ✨</button>
+    </div>
+
+    <!-- STEP 2: THE BED QUESTION -->
+    <div id="step-2" class="screen">
+        <h1>If you love me, join me to my bed... 😏</h1>
+        <div class="btn-container">
+            <button id="yes-btn" onclick="nextStep(2, 3)">YES! 😍</button>
+            <button id="no-btn" onmouseover="moveNoButton()">no</button>
+        </div>
+    </div>
+
+    <!-- STEP 3: THE BEAR & BLOW A KISS -->
+    <div id="step-3" class="screen">
+        <!-- Flirty Bear Aesthetic (GIF or Image) -->
+        <div class="bear-container">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWp0eWZ6bXp3Znd0Ym10b3ZnbmNidXp3Y3Z0am01bXp3OHZyeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/vVzH2Li3e0JN5659Sb/giphy.gif" alt="Flirty Bear">
+        </div>
+        <h1>Blow a kiss for the surprise 💋</h1>
+        <p class="subtext">(Blow into your microphone to trigger it!)</p>
+        <button id="mic-fallback" onclick="nextStep(3, 4)" style="display:none; margin-top:20px;">Click here if mic permission is blocked</button>
+    </div>
+
+    <!-- STEP 4: THE VIDEO & PHOTOS GRID -->
+    <div id="step-4" class="screen">
+        <div class="grid-container">
+            <!-- Left Side: Friend's Pics & Notes -->
+            <div class="gallery-item"><img src="pic1.jpg" alt="Pic 1"><p>Every moment with you is favorite recollection.</p></div>
+            <div class="gallery-item"><img src="pic2.jpg" alt="Pic 2"><p>You light up my entire world.</p></div>
+            
+            <!-- Center: Purple Heart & Press Button -->
+            <div class="center-heart">
+                <div class="purple-heart">💜</div>
+                <button id="press-btn" onclick="nextStep(4, 5)">PRESS</button>
+            </div>
+
+            <!-- Right Side: Friend's Pics & Notes -->
+            <div class="gallery-item"><img src="pic3.jpg" alt="Pic 3"><p>The most beautiful girl inside and out.</p></div>
+            <div class="gallery-item"><img src="pic4.jpg" alt="Pic 4"><p>Cheers to another beautiful year together!</p></div>
+        </div>
+    </div>
+
+    <!-- STEP 5: THE BIG POPPING LETTER -->
+    <div id="step-5" class="screen">
+        <div class="letter-container" id="letter">
+            <h2>My Letter To You 💌</h2>
+            <p>Insert your long, beautiful, deep birthday letter right here. Tell her how much she means to you, look back at your memories, and remind her why she is so loved!</p>
+            <p>Forever and always, 💜</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
