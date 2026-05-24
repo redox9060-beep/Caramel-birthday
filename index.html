@@ -69,6 +69,70 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <    <script>
+    function nextStep(current, next) {
+        var currentScreen = document.getElementById('step-' + current);
+        var nextScreen = document.getElementById('step-' + next);
+        if (currentScreen && nextScreen) {
+            currentScreen.classList.remove('active');
+            nextScreen.classList.add('active');
+        }
+        if (next === 5) {
+            var audio = document.getElementById('bg-music');
+            if (audio) { audio.play().catch(function(e){ console.log(e); }); }
+        }
+        if (next === 3) { initMicrophone(); }
+    }
+
+    function moveNoButton() {
+        var noBtn = document.getElementById('no-btn');
+        if (noBtn) {
+            var x = Math.floor(Math.random() * 160) - 80;
+            var y = Math.floor(Math.random() * 80) - 40;
+            noBtn.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+        }
+    }
+
+    function initMicrophone() {
+        setTimeout(function() {
+            var fallback = document.getElementById('mic-fallback');
+            if (fallback) fallback.style.display = 'block';
+        }, 4000);
+
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+            .then(function(stream) {
+                var AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                var audioContext = new AudioContext();
+                var analyser = audioContext.createAnalyser();
+                var microphone = audioContext.createMediaStreamSource(stream);
+                var javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+
+                analyser.smoothingTimeConstant = 0.8;
+                analyser.fftSize = 1024;
+                microphone.connect(analyser);
+                analyser.connect(javascriptNode);
+                javascriptNode.connect(audioContext.destination);
+
+                javascriptNode.onaudioprocess = function() {
+                    var array = new Uint8Array(analyser.frequencyBinCount);
+                    analyser.getByteFrequencyData(array);
+                    var values = 0;
+                    for (var i = 0; i < array.length; i++) { values += array[i]; }
+                    var average = values / array.length;
+                    if (average > 45) { 
+                        stream.getTracks().forEach(function(track) { track.stop(); });
+                        javascriptNode.onaudioprocess = null;
+                        nextStep(3, 4);
+                    }
+                };
+            }).catch(function(err) { console.log(err); });
+        }
+    }
+    </script>
+</body>
+</html>
+
 </body>
 </html>
