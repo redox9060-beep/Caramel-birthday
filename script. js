@@ -1,75 +1,87 @@
 // Function to switch between screens smoothly
 function nextStep(current, next) {
-    document.getElementById(`step-${current}`).classList.remove('active');
-    document.getElementById(`step-${next}`).classList.add('active');
-
-    // If entering the final letter step, trigger your audio song
-    if (next === 5) {
-        const audio = document.getElementById('bg-music');
-        audio.play().catch(error => console.log("Audio play prevented until interaction:", error));
+    var currentScreen = document.getElementById('step-' + current);
+    var nextScreen = document.getElementById('step-' + next);
+    
+    if (currentScreen && nextScreen) {
+        currentScreen.classList.remove('active');
+        nextScreen.classList.add('active');
     }
 
-    // Initialize microphone listener when arriving at Step 3
+    // Trigger audio track when arriving at the final letter step
+    if (next === 5) {
+        var audio = document.getElementById('bg-music');
+        if (audio) {
+            audio.play().catch(function(error) {
+                console.log("Audio autoplay restriction handled:", error);
+            });
+        }
+    }
+
+    // Initialize microphone listener on Step 3
     if (next === 3) {
         initMicrophone();
     }
 }
 
-// Make the "No" button run away when hovered over
+// Make the "No" button move dynamically on touch or hover
 function moveNoButton() {
-    const noBtn = document.getElementById('no-btn');
-    // Calculate random position inside the button container boundaries
-    const x = Math.floor(Math.random() * 200) - 100;
-    const y = Math.floor(Math.random() * 100) - 50;
-    
-    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    var noBtn = document.getElementById('no-btn');
+    if (noBtn) {
+        var x = Math.floor(Math.random() * 160) - 80;
+        var y = Math.floor(Math.random() * 80) - 40;
+        noBtn.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+    }
 }
 
-// Microphone Kiss / Blow Detection Logic
+// Microphone Sound / Blow Detection
 function initMicrophone() {
-    // Show a manual backup click option just in case mic permissions are blocked
-    setTimeout(() => {
-        const fallback = document.getElementById('mic-fallback');
+    // Show a manual bypass button after 4 seconds if mic permissions are blocked
+    setTimeout(function() {
+        var fallback = document.getElementById('mic-fallback');
         if (fallback) fallback.style.display = 'block';
     }, 4000);
 
-    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-    .then(stream => {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const analyser = audioContext.createAnalyser();
-        const microphone = audioContext.createMediaStreamSource(stream);
-        const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+        .then(function(stream) {
+            var AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            
+            var audioContext = new AudioContext();
+            var analyser = audioContext.createAnalyser();
+            var microphone = audioContext.createMediaStreamSource(stream);
+            var javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
 
-        analyser.smoothingTimeConstant = 0.8;
-        analyser.fftSize = 1024;
+            analyser.smoothingTimeConstant = 0.8;
+            analyser.fftSize = 1024;
 
-        microphone.connect(analyser);
-        analyser.connect(javascriptNode);
-        javascriptNode.connect(audioContext.destination);
+            microphone.connect(analyser);
+            analyser.connect(javascriptNode);
+            javascriptNode.connect(audioContext.destination);
 
-        javascriptNode.onaudioprocess = function() {
-            const array = new Uint8Array(analyser.frequencyBinCount);
-            analyser.getByteFrequencyData(array);
-            let values = 0;
+            javascriptNode.onaudioprocess = function() {
+                var array = new Uint8Array(analyser.frequencyBinCount);
+                analyser.getByteFrequencyData(array);
+                var values = 0;
 
-            const length = array.length;
-            for (let i = 0; i < length; i++) {
-                values += array[i];
-            }
+                for (var i = 0; i < array.length; i++) {
+                    values += array[i];
+                }
 
-            const average = values / length;
+                var average = values / array.length;
 
-            // Threshold for blowing/loud kiss sound
-            if (average > 55) { 
-                // Stop microphone tracking
-                stream.getTracks().forEach(track => track.stop());
-                javascriptNode.onaudioprocess = null;
-                // Advance to the picture grid
-                nextStep(3, 4);
-            }
-        };
-    })
-    .catch(err => {
-        console.log("Microphone access denied or unsupported.", err);
-    });
+                // Audio threshold trigger
+                if (average > 45) { 
+                    stream.getTracks().forEach(function(track) { track.stop(); });
+                    javascriptNode.onaudioprocess = null;
+                    nextStep(3, 4);
+                }
+            };
+        })
+        .catch(function(err) {
+            console.log("Microphone access unavailable:", err);
+        });
+    }
 }
+
